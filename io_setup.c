@@ -165,7 +165,7 @@ void buttons(void)
     if (!BUTTON1)
     {
         button_on(1);
-        delay(2);            //delay for debouncing when button is pressed
+        delay(100);            //delay for debouncing when button is pressed
     }
     else
     {
@@ -176,7 +176,7 @@ void buttons(void)
     {
         
         button_on(2);
-        delay(2);
+        delay(100);
     }
     else
     {
@@ -187,7 +187,7 @@ void buttons(void)
     {
         
         button_on(3);
-        delay(2);
+        delay(100);
     }
     else
     {
