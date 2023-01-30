@@ -206,6 +206,7 @@ void buttons(void)
     {
         
         button_on(3);
+        puts("\033[3B");   // cursor down
         delay(100);
     }
     else
