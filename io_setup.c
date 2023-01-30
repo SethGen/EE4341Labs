@@ -184,6 +184,7 @@ void buttons(void)
     if (!BUTTON1)
     {
         button_on(1);
+        printf("Button 1 \n \r");
         delay(100);            //delay for debouncing when button is pressed
     }
     else
@@ -195,6 +196,7 @@ void buttons(void)
     {
         
         button_on(2);
+        printf("Button 2 \n \r");
         delay(100);
     }
     else
