@@ -8,6 +8,7 @@
 void setup(void)
 {
     io_setup();
+    uart1_setup();
     // include any other setup functions here
 }
 int main(void)
