@@ -59,7 +59,7 @@ void spi2_write_register(uint8_t address, uint8_t data)
     // wait for the SPI2 buffer full bit
     while(!SPI2STATbits.SPIRBF){};
     // clear SPI2 buffer using the "trash" variable
-    SPI2BUF = trash;
+    trash = SPI2BUF;
     // disable accelerometer chip select
     LATGbits.LATG9 = 1;
 }
