@@ -5,7 +5,7 @@
  */
 /* ************************************************************************** */
 #include "io_setup.h"
-//#include "accel_define.h"
+#include "accel_define.h"
 
 
 
@@ -14,7 +14,7 @@ void setup(void)
 {
     io_setup();
     uart1_setup();
-//    spi2_setup();
+    spi2_setup();
     // include any other setup functions here
 }
 int main(void)
@@ -23,7 +23,6 @@ int main(void)
     while(1)
     { 
         delay(1);
-//        accel_test();
         buttons();
     }
     return 0;
