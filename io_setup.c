@@ -38,6 +38,7 @@
 #pragma config CP = OFF                // Code Protect->Protection Disabled
 // SYSCLK = 80MHz, PBCLK = 40MHz //
 #include "io_setup.h"
+#include "accel_define.h"
 void system_reg_unlock(void)
 {
     SYSKEY = 0x12345678;
