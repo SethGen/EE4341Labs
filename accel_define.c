@@ -80,7 +80,7 @@ int16_t spi2_read_register(uint8_t address)
     // read the SPI2 buffer contents with the "value" variable
     value = SPI2BUF;
     // disable accelerometer chip select
-    LATGbits.LATG9 = 0;
+    LATGbits.LATG9 = 1;
     
     return value;
 }
@@ -95,11 +95,15 @@ float accel_read_x(void)
    
    X_H = spi2_read_register(OUT_X_H)&0x00FF;
    X_L = spi2_read_register(OUT_X_L)&0x00FF;
-   
+   float hPrint = (float)X_H;
+   float lPrint = (float)X_L;
+//   printf("High Byte(X): %f", hPrint);
+//   printf("\n");
+//   printf("Low Byte(X): %f ",lPrint);
+//   printf("\n");
    // Combine data from both registers
    // See Lab2 manual for instructions
    X = (X_H << 8) | X_L;
-
    float value = X * 0.000061;            // Convert to units of g
    return value;
 }
@@ -113,11 +117,15 @@ float accel_read_y(void)
    
    Y_H = spi2_read_register(OUT_Y_H)&0x00FF;
    Y_L = spi2_read_register(OUT_Y_L)&0x00FF;
-   
+   float hPrint = (float)Y_H;
+   float lPrint = (float)Y_L;
+//   printf("High Byte(Y): %f", hPrint);
+//   printf("\n");
+//   printf("Low Byte(Y): %f ",lPrint);
+//   printf("\n");
    // Combine data from both registers
    // See Lab2 manual for instructions
    Y = (Y_H << 8) | Y_L;
-   
    float value = Y * 0.000061;            // Convert to units of g
    return value;
 }
@@ -128,8 +136,8 @@ float accel_read_z(void)
    int16_t Z_L; 
    int16_t Z;
    
-   Z_H = spi2_read_register(OUT_Z_H)&0x00FF;
-   Z_L = spi2_read_register(OUT_Z_L)&0x00FF;
+   Z_H = spi2_read_register(OUT_Z_H);
+   Z_L = spi2_read_register(OUT_Z_L);
    
    Z = (Z_H << 8) | Z_L;
    
@@ -159,7 +167,6 @@ void test_accel(void)
     putchar(' ');
     
     int16_t test = spi2_read_register(0x0F);  // read WHO_AM_I register
-    
     if (test == 0x0033)
     {
         printf("Pass");
@@ -167,6 +174,7 @@ void test_accel(void)
     else
     {
         printf("Fail");
+
     }
 }
 void accel_print_data(char axis)
@@ -192,14 +200,15 @@ void accel_print_data(char axis)
 }
 void accel_move_cursor(void)
 {
-    if (accel_read_x() > 0.4)
-    {
-        putchar(' ');
-    }
-    else if (accel_read_x() < -0.4)
-    {
-        putchar(0x8);
-    }
+//    if (accel_read_x() > 0.4)
+//    {
+//        putchar(' ');
+//    }
+//    else if (accel_read_x() < -0.4)
+//    {
+//        putchar(0x8);
+//    }
+    putchar(0x8);
     
 }
 
