@@ -190,7 +190,8 @@ void buttons(void)
     if (!BUTTON1)
     {
         button_on(1);
-//        accel_print_data('x');
+        printf("\r x data: ");
+        accel_print_data('x');
         delay(50);            //delay for debouncing when button is pressed
     }
     else
@@ -201,8 +202,8 @@ void buttons(void)
     if (!BUTTON2)
     {
         
-        button_on(2);
-//        accel_print_data('y');
+        printf("\r y data: ");
+        accel_print_data('y');
         delay(50);
     }
     else
@@ -214,7 +215,7 @@ void buttons(void)
     {
         
         button_on(3);
-//        accel_move_cursor();
+        accel_move_cursor();
         delay(50);
     }
     else
