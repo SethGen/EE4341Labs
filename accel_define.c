@@ -53,6 +53,7 @@ void spi2_write_register(uint8_t address, uint8_t data)
             
     delay(1);
     // enable accelerometer chip select
+    LATGbits.LATG9 = 0;
     // send "write_frame" to the SPI2 buffer
     SPI2BUF = write_frame;
     // wait for the SPI2 buffer full bit
@@ -60,6 +61,7 @@ void spi2_write_register(uint8_t address, uint8_t data)
     // clear SPI2 buffer using the "trash" variable
     SPI2BUF = trash;
     // disable accelerometer chip select
+    LATGbits.LATG9 = 1;
 }
 
 int16_t spi2_read_register(uint8_t address)
@@ -70,6 +72,7 @@ int16_t spi2_read_register(uint8_t address)
     read_frame = (((uint16_t)address|0x80) << 8) | 0x00;
     delay(1);
     // enable accelerometer chip select
+    LATGbits.LATG9 = 0;
     // send "read_frame to SPI2 buffer
     SPI2BUF = read_frame;
     // wait for the SPI2 buffer full bit
@@ -77,6 +80,7 @@ int16_t spi2_read_register(uint8_t address)
     // read the SPI2 buffer contents with the "value" variable
     value = SPI2BUF;
     // disable accelerometer chip select
+    LATGbits.LATG9 = 0;
     
     return value;
 }
