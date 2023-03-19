@@ -142,7 +142,7 @@ int initMedia(void){
     // 6. increase speed: disable SPI first, change settings and re-enable
     SPI1CON = 0; // disable the SPI2 module
     delay(1);
-    SPI1BRG = 0; // Fpb/(2*(0+1))= 40/2 = 20 MHz
+    SPI1BRG = 1; // Fpb/(2*(1+1))= 40/4 = 10 MHz
     SPI1CON = 0x8120; // re-enable the SPI2 module
     return 0;
 } // init media
