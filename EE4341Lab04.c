@@ -42,7 +42,7 @@ typedef unsigned LBA; // logic block address, 32 bit wide
 
 
 
-void delay1(int ms){
+void delay(int ms){
     ms = 2*ms;
     while(ms-- > 0){
         asm(".rept 19994");   //1 cycle = 25ns ; 1ms = 40,000 cycles
@@ -122,7 +122,7 @@ int initMedia(void){
     
     // 6. increase speed: disable SPI first, change settings and re-enable
     SPI1CON = 0; // disable the SPI2 module
-    delay1(1);
+    delay(1);
     SPI1BRG = 0; // Fpb/(2*(0+1))= 40/2 = 20 MHz
     SPI1CON = 0x8120; // re-enable the SPI2 module
     return 0;
@@ -229,4 +229,107 @@ void initData(void){
         b ^= 1;
     }
 }
+
+
+void system_reg_unlock(void)
+{
+    SYSKEY = 0x12345678;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
+}
+void system_reg_lock(void)
+{
+    SYSKEY = 0x00000000; 
+}
+
+void uart1_setup(void)      //Sets up UART1 with a baud rate of 9600 bit/sec
+{   
+    // BRGH OFF; UEN TX_RX;
+    U1MODEbits.BRGH = 0;          //Standard Speed mode ? 16x baud clock enabled
+    U1MODEbits.UEN = 0;       //0b10 = UxTX, UxRX, UxCTS and UxRTS pins are enabled and used
+    // BaudRate = 9600; Frequency = 40000000 Hz; BRG 259;
+    U1BRG = 259;
+    // Enable transmit
+    U1STAbits.UTXEN = 1;         //Enable UART1 Transmit
+    // Enable receive
+    U1STAbits.URXEN = 1;         //Enable UART1 Receive
+    // Enable UART (ON bit)
+    U1MODEbits.ON = 1;
+    __XC_UART = 1;              // Code is configured to use UART1 for printf()
+}
+
+void io_setup(void)
+{
+// Below are the defaults , you will have to edit to make changes
+// Add a comment for each edit you make, so you don't forget
+    /****************************************************************************
+     * Setting the Output Latch SFR(s)
+     ***************************************************************************/
+    LATA = 0x0000;
+    LATB = 0x0000;
+    LATC = 0x0000;
+    LATD = 0x0000;
+    LATE = 0x0000;
+    LATF = 0x0000;
+    LATG = 0x0000;
+    /****************************************************************************
+     * Setting the GPIO Direction SFR(s)
+     ***************************************************************************/
+    TRISA = 0xC6FF;     
+    TRISB = 0xFFFF;
+    TRISC = 0xF01E;
+    TRISD = 0xFFF8;     
+    TRISE = 0x03FF;
+    TRISF = 0x313F;     
+    TRISG = 0xF3C3;
+    /****************************************************************************
+     * Setting the Weak Pull Up and Weak Pull Down SFR(s)
+     ***************************************************************************/
+    CNPDA = 0x0000;
+    CNPDB = 0x0000;
+    CNPDC = 0x0000;
+    CNPDD = 0x0000;
+    CNPDE = 0x0000;
+    CNPDF = 0x0000;
+    CNPDG = 0x0000;
+    CNPUA = 0x0000;
+    CNPUB = 0x0000;
+    CNPUC = 0x0000;
+    CNPUD = 0x20C0;     //RD6, RD7 and RD13 Pulled Up 
+    CNPUE = 0x0000;
+    CNPUF = 0x0000;
+    CNPUG = 0x0000;
+    /****************************************************************************
+     * Setting the Open Drain SFR(s)
+     ***************************************************************************/
+    ODCA = 0x0000;
+    ODCB = 0x0000;
+    ODCC = 0x0000;
+    ODCD = 0x0000;
+    ODCE = 0x0000;
+    ODCF = 0x0000;
+    ODCG = 0x0000;
+    /****************************************************************************
+     * Setting the Analog/Digital Configuration SFR(s)
+     ***************************************************************************/
+    ANSELA = 0x0000;
+    ANSELB = 0x0000;
+    ANSELD = 0x0000;
+    ANSELE = 0x0000;
+    ANSELG = 0x0000;
+    /****************************************************************************
+     * Set the PPS
+     ***************************************************************************/
+    system_reg_unlock();            // unlock PPS
+    CFGCONbits.IOLOCK = 0;
+    //UART1 Setup
+    U1RXRbits.U1RXR = 0b0010;       //UART RX = RPF4(Pin 49) Values given in PIC32 Family Reference Manual
+    RPF5Rbits.RPF5R = 0b0011;       //UART TX = RPF5(Pin 50)
+    CFGCONbits.IOLOCK = 1;          // lock   PPS
+    system_reg_lock;
+    _TRISF0 = 1; // make Card Detect an input pin
+    _TRISF1 = 1; // make Write Protect Detect an input pin
+}
+
+
 
