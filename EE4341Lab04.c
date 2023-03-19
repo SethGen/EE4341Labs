@@ -121,10 +121,10 @@ int initMedia(void){
         return E_INIT_TIMEOUT; // init timed out
     
     // 6. increase speed: disable SPI first, change settings and re-enable
-    SPI2CON = 0; // disable the SPI2 module
+    SPI1CON = 0; // disable the SPI2 module
     delay1(1);
-    SPI2BRG = 0; // Fpb/(2*(0+1))= 40/2 = 20 MHz
-    SPI2CON = 0x8120; // re-enable the SPI2 module
+    SPI1BRG = 0; // Fpb/(2*(0+1))= 40/2 = 20 MHz
+    SPI1CON = 0x8120; // re-enable the SPI2 module
     return 0;
 } // init media
 
