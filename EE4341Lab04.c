@@ -2,7 +2,6 @@
 ** SDMMC.c SD card interface
 */
 #include <xc.h>
-#include "SDMMC.h"
 
 // I/O definitions
 // NOTE: Do not use the pins given
@@ -38,7 +37,6 @@ typedef unsigned LBA; // logic block address, 32 bit wide
 #define I_TIMEOUT 10000
 #define R_TIMEOUT 25000
 #define W_TIMEOUT 250000
-
 
 
 
