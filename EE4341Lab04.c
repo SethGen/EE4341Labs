@@ -53,7 +53,7 @@ void delay1(int ms){
 
 void initSD(void){
     SDCS = 1; // initially keep the SD card disabled
-    _TRISB0 = 0; // make Card select an output pin
+    _TRISB1 = 0; // make Card select an output pin
     // init the SPI2 module for a slow (safe) clock speed first
     SPI1CON = 0x8120; // ON, CKE=1; CKP=0, sample middle
     SPI1BRG = 63; // Baud Rate = 312.5kHz
