@@ -372,6 +372,13 @@ void io_setup(void)
 #define N_BLOCKS 1 // number of blocks 
 #define LED3 _RD2  // visual feedback about SD usage status - fail
 #define LED2 _RD1  // visual feedback about SD usage status - pass
+
+
+
+void setup(void){
+    io_setup();
+    uart1_setup();
+}
  
 main(void){
     
@@ -387,14 +394,16 @@ main(void){
     // set RD1 and RD2 as outputs:
     TRISDbits.TRISD1 = 0;
     TRISDbits.TRISD2 = 0;
-    TRISB = 0x0000;
+
+    
     
     LED3 = 0;
     LED2 = 0;
     
     LBA addr;
     int i, j, r;
-
+    // 0. Initialize I/O
+    setup();
     // 1. initialize data
     initData();
     // 2. initialize SD/MMC module
@@ -482,5 +491,4 @@ main(void){
 //    '1', 'S', 'N', 'V', 'Z', 'I', 'C', 'X', 'I', 'Q', 'R', '1', 'N', 'E', 'I', 'J', 'B', 'B', 'P', 'V', 'A', 'J', 'J', 'J',
 //    'F', 'Q', 'G', 'F', 'O', 'P', 'L', 'W', 'G', 'J', 'S', 'M', 'O', 'G', 'Y', '7', 'T', 'S', 'N', 'H', '6', '5', 'X', '3',
 //    'Q', 'N', 'L', '0', '8', 'X', 'O', 'C', 'Z', 'R', 'D', 'M'};
-
 
