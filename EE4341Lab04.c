@@ -2,7 +2,38 @@
 ** SDMMC.c SD card interface
 */
 #include <xc.h>
-
+// DEVCFG3
+#pragma config FSRSSEL = PRIORITY_7    // Shadow Register Set Priority Select->SRS :Priority 7
+#pragma config PMDL1WAY = ON           // Peripheral Module Disable Configuration-Allow only one reconfiguration
+#pragma config IOL1WAY = ON            // Peripheral Pin Select Configuration-Allow only one reconfiguration
+#pragma config FUSBIDIO = ON           // USB USID Selection->Controlled by the USB Module
+#pragma config FVBUSONIO = ON          // USB VBUS ON Selection->Controlled by USB Module
+// DEVCFG2
+#pragma config FPLLIDIV = DIV_2        // PLL Input Divider->2x Divider
+#pragma config FPLLMUL = MUL_20        // PLL Multiplier->20x Multiplier
+#pragma config UPLLIDIV = DIV_12       // USB PLL Input Divider->12x Divider
+#pragma config UPLLEN = OFF            // USB PLL Enable->Disabled and Bypassed
+#pragma config FPLLODIV = DIV_1        // System PLL Output Clock Divider->PLL Divide by 1
+// DEVCFG1
+#pragma config FNOSC = FRCPLL          // Oscillator Selection Bits->Fast RC Osc with PLL
+#pragma config FSOSCEN = ON            // Secondary Oscillator Enable->Enabled
+#pragma config IESO = ON               // Internal/External Switch Over->Enabled
+//#pragma config POSCMOD = OFF           // Primary Oscillator Configuration->Primary osc disabled
+#pragma config OSCIOFNC = OFF          // CLKO Output Signal Active on the OSCO Pin->Disabled
+#pragma config FPBDIV = DIV_2          // Peripheral Clock Divisor->Pb_Clk is Sys_Clk/2
+#pragma config FCKSM = CSDCMD          // Clock Switching and Monitor Selection-Clock Switch Disable, FSCM Disabled
+#pragma config WDTPS = PS1048576       // Watchdog Timer Postscaler->1:1048576
+#pragma config WINDIS = OFF            // Watchdog Timer Window Enable->Watchdog Timer is in Non-Window Mode
+#pragma config FWDTEN = ON             // Watchdog Timer Enable->WDT Enabled
+#pragma config FWDTWINSZ = WINSZ_25    // Watchdog Timer Window Size->Window Size is 25%
+// DEVCFG0
+#pragma config DEBUG = OFF             // Background Debugger Enable->Debugger is Disabled
+#pragma config JTAGEN = ON             // JTAG Enable->JTAG Port Enabled
+#pragma config ICESEL = ICS_PGx2       // ICE/ICD Comm Channel Select->Communicate on PGEC2/PGED2
+#pragma config PWP = OFF               // Program Flash Write Protect->Disable
+#pragma config BWP = OFF               // Boot Flash Write Protect bit->Protection Disabled
+#pragma config CP = OFF                // Code Protect->Protection Disabled
+// SYSCLK = 80MHz, PBCLK = 40MHz //
 //Header File SDMMC.h
 #define FAIL FALSE
 // Init ERROR code definitions
@@ -348,6 +379,9 @@ void io_setup(void)
     system_reg_lock;
     _TRISF0 = 1; // make Card Detect an input pin
     _TRISF1 = 1; // make Write Protect Detect an input pin
+    
+//    _TRISF4 = 1;
+//    _TRISF5 = 0;
 }
 
 
@@ -362,9 +396,9 @@ void io_setup(void)
 
 
 // configuration bit settings, Fcy=72 MHz, Fpb=36 MHz
-#pragma config POSCMOD=XT, FNOSC=PRIPLL
-#pragma config FPLLIDIV=DIV_2, FPLLMUL=MUL_18, FPLLODIV=DIV_1
-#pragma config FPBDIV=DIV_2, FWDTEN=OFF, CP=OFF, BWP=OFF
+//#pragma config POSCMOD=XT, FNOSC=PRIPLL
+//#pragma config FPLLIDIV=DIV_2, FPLLMUL=MUL_18, FPLLODIV=DIV_1
+//#pragma config FPBDIV=DIV_2, FWDTEN=OFF, CP=OFF, BWP=OFF
 
 #include <stdio.h>
 #include <string.h>
@@ -403,11 +437,14 @@ main(void){
     LBA addr;
     int i, j, r;
     // 0. Initialize I/O
-    setup();
+    
     // 1. initialize data
     initData();
     // 2. initialize SD/MMC module
     initSD();
+    
+    setup();
+    delay(1);
     // 3. fill the buffer with pattern
     for( i=0; i<B_SIZE; i++)
         data[i]= i;
@@ -415,7 +452,7 @@ main(void){
     // 4. wait for the card to be inserted
     printf( " Insert card.... \n \r" );
     while(!getCD()); // check CD switch
-    delay(200); // wait contacts de-bounce
+    delay(300); // wait contacts de-bounce
     if ( initMedia()) // init card
         { // if error code returned
         printf("Failed Init  \n \r" );
@@ -491,4 +528,3 @@ main(void){
 //    '1', 'S', 'N', 'V', 'Z', 'I', 'C', 'X', 'I', 'Q', 'R', '1', 'N', 'E', 'I', 'J', 'B', 'B', 'P', 'V', 'A', 'J', 'J', 'J',
 //    'F', 'Q', 'G', 'F', 'O', 'P', 'L', 'W', 'G', 'J', 'S', 'M', 'O', 'G', 'Y', '7', 'T', 'S', 'N', 'H', '6', '5', 'X', '3',
 //    'Q', 'N', 'L', '0', '8', 'X', 'O', 'C', 'Z', 'R', 'D', 'M'};
-
